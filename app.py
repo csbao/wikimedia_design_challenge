@@ -53,8 +53,8 @@ class WikiEmbedding:
 @app.route("/")
 def hello():
     en_embedding = WikiEmbedding('2017-01-01_2017-01-30_en_100')
-    return en_embedding.most_similar('Word2vec')
+    return str(en_embedding.most_similar('Word2vec'))
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5050)
