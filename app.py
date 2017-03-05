@@ -1,11 +1,10 @@
 from flask import Flask
 app = Flask(__name__)
 
-import numpy as np
+import numpy as np, json
 from sklearn.preprocessing import normalize
+from flask import render_template
 import requests
-
-
 
 
 class WikiEmbedding:
@@ -15,7 +14,6 @@ class WikiEmbedding:
         self.idx2w = []
 
         with open(fname, 'rb') as f:
-
             try:
                 m, n = next(f).decode('utf8').strip().split(' ')
                 self.E = np.zeros((int(m), int(n)))
@@ -50,11 +48,19 @@ class WikiEmbedding:
         nn_scores = scores[min_idxs][ranking]
         return list(zip(list(nn_ws), list(nn_scores)))
 
-@app.route("/")
 def hello():
     en_embedding = WikiEmbedding('2017-01-01_2017-01-30_en_100')
-    return str(en_embedding.most_similar('Word2vec'))
+    return json.dumps(en_embedding.most_similar('Word2vec', n=300))
 
 
+@app.route("/")
+def index():
+    """ Request ..."""
+    return render_template("index.html", data=hello())
+
+# @app.route("/")
+# def ginex():
+#     search = request.args.get('article', '')
+#     if len(search) == 0: search = "Wikipedia"
 if __name__ == "__main__":
     app.run(port=5050)
