@@ -50,7 +50,7 @@ class WikiEmbedding:
 
 def hello():
     en_embedding = WikiEmbedding('2017-01-01_2017-01-30_en_100')
-    return json.dumps(en_embedding.most_similar('Word2vec', n=300))
+    return json.dumps(en_embedding.most_similar('Word2vec', n=10))
 
 
 @app.route("/")
@@ -58,6 +58,9 @@ def index():
     """ Request ..."""
     return render_template("index.html", data=hello())
 
+
+# data = {};
+# winners = json.load(open('data/nobel_winners_biopic.json'))
 # @app.route("/")
 # def ginex():
 #     search = request.args.get('article', '')
