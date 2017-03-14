@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>WikiArticles</title>
+	<style>
+	      	body{ 
+		  margin-top: 50;
+		  margin-left: 30px;
+		   }
+
+		  
+			table, th, td {
+			    border: 3px solid white;
+			    border-collapse: collapse;
+			    border-radius: 4px;
+			}
+			th, td {
+			    padding: 5px;
+			}
+			th {
+			    text-align: left;
+			}
+
+	     	tr:nth-child(even) {
+	         background-color: #eff2f2;
+	        }
+
+	        th {
+	           background-color: #40b5b7;
+	           color: white;
+	         }
+
+	</style>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+<body>
+
+<h1>Search WIKI Articles</h1>
+<p>Get articles related to a topic relevant to you</p>
+<label for="promo">Topic</label>
+<input type="text" name="topic" placeholder="word2vector">
+<br><br>
+
+<!-- TO USE WITH SVG -->
+<svg width="960" height="960" font-family="sans-serif" font-size="10" text-anchor="middle"> </svg>
+
+<script>
+var dataset ={{data|safe}};
+var header = ["Title", "Percentage"]
+
+// // TABLE VIEW OPTION
+// //http://bl.ocks.org/d3noob/473f0cf66196a008cf99
+// var table = d3.select('body').append('table')
+//               .style("margin-left", "70px" ),
+//             thead = table.append('thead'),
+//             tbody = table.append("tbody");
+    
+// thead.append("tr")
+//          .selectAll("th")
+//         .data(header)
+//         .enter().append("th")
+//         .text(function(d) { return d; })
+
+// var tt =tbody.selectAll('tr')
+//              .data(dataset).enter()
+//              .append('tr');
+    
+// tt.append('td').html(function(m) { return m[0]; })
+// tt.append('td').html(function(m) { return m[1] })
+//   .style("width","250px")
+// // tr.append('td').html(function(m) { return m.budget; });
+
+
+
+/////////////////////////////////////////////////////////////////////
+
+// PACK VIEW OPTION
+  var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+// var dataset = [["name",4 ],["title", 3],["hola",7],["chess", 2]];
+
+var color = d3.scaleOrdinal(d3.schemeCategory20c);
+
+var pack = d3.pack()
+    .size([width, height])
+    .padding(1.5);
+
+
+root = d3.hierarchy({children:dataset}) 
+      .sum(function(d) { if (d.length!== undefined) return d.length })
+      // .sort(function(a, b) {if (b!== undefined && a!== undefined )  return b.data[1]-a.data[1]})
+      .each(function(d) { if (d!== undefined) return d.data});
+
+  var node = svg.selectAll(".node")
+            .data(pack(root).leaves())
+            .enter().append("g")
+            .attr("class", "node") 
+            .attr("transform", function(d){return "translate(" + d.x + "," + d.y + ")"; });
+
+  node.append("circle")
+      .attr("r", function(d) { return ((d.data[1]*1000)-800)})
+      .attr("fill",function(d) { return color(d.data)});
+
+  node.append("text")
+      .attr("dy", "0.3em")
+      .text(function(d) { return  d.data[0]});
+
+</script>
+</body>
+</html>
