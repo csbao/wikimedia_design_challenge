@@ -58,12 +58,5 @@ def index():
     """ Request ..."""
     return render_template("index.html", data=hello())
 
-
-# data = {};
-# winners = json.load(open('data/nobel_winners_biopic.json'))
-# @app.route("/")
-# def ginex():
-#     search = request.args.get('article', '')
-#     if len(search) == 0: search = "Wikipedia"
 if __name__ == "__main__":
     app.run(port=5050)
